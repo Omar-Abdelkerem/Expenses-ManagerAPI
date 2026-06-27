@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon app.js"
   },
-  "author": "",
+  "author": "Omar-Abdelkerem",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^6.0.0",
