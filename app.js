@@ -23,6 +23,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(xss());
 // Routes
+app.get("/", (req, res) => {
+  res.status(200).send("API is running");
+});
 app.use("/expenses", authMiddleware, expensesRoutes);
 app.use("/auth", authRoutes);
 app.use("/profile", authMiddleware, ProfileRoutes);
