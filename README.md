@@ -2,6 +2,97 @@
 
 A focused, production-minded Node.js + Express API for personal expense tracking. It provides secure user registration and login, budget management, CRUD for expenses and categories, and a profile summary endpoint that calculates total spending and remaining budget. The project uses MongoDB (Mongoose) for persistence and JSON Web Tokens (JWT) for authentication.
 
+## Live API
+
+The API is deployed and publicly accessible on Railway.
+
+**Base URL**
+
+```text
+https://expenses-managerapi-production.up.railway.app
+```
+
+You can use this URL directly with Postman, Bruno, or any HTTP client.
+
+## Postman Collection
+
+A ready-to-use Postman collection is included in this repository.
+
+The collection is organized into:
+
+- Authentication
+- Expenses
+- Categories
+- Profile
+
+All request bodies contain placeholder fields so you only need to fill in your own values before sending the request.
+
+Example:
+
+```json
+{
+  "title": "",
+  "amount": "",
+  "category": ""
+}
+```
+
+All authenticated requests already contain a Bearer Token field.
+Simply paste the JWT received from the Login endpoint.
+
+## Postman Environments
+
+Two Postman environments are included:
+
+| Environment | Purpose                       |
+| ----------- | ----------------------------- |
+| Localhost   | Test the API locally          |
+| Production  | Test the deployed Railway API |
+
+The collection uses environment variables instead of hardcoded URLs.
+
+Example:
+
+```text
+{{URL}}/expenses
+```
+
+Switching between local development and the deployed API only requires changing the active Postman environment.
+
+## Testing the API
+
+Import the provided Postman collection together with one of the included environments.
+
+### Local Development
+
+Select the **localhost** environment.
+
+```
+{{URL}}
+```
+
+will automatically point to
+
+```
+http://localhost:5000
+```
+
+### Production
+
+Select the **Production** environment.
+
+```
+{{URL}}
+```
+
+will automatically point to
+
+```
+https://expenses-managerapi-production.up.railway.app
+```
+
+No request URLs need to be modified manually.
+
 ## Project Highlights
 
 - Secure authentication with JWT and bcrypt
@@ -32,6 +123,11 @@ Expenses-Manager/
 ├── Routes/                # Express routers
 ├── README.md
 └── package.json
+
+Postman/
+├── Expenses_manager.postman_collection.json
+├── localhost.postman_environment.json
+└── ProductionLink.postman_environment.json
 ```
 
 ## Dependencies
