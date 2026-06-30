@@ -1,5 +1,6 @@
 const Expense = require("../Models/expenses");
 const Category = require("../Models/category");
+const { getStatistics } = require("../services/expenseStatistics");
 const { StatusCodes } = require("http-status-codes");
 const {
   BadRequestError,
@@ -117,9 +118,16 @@ const updateExpense = async (req, res) => {
   res.status(StatusCodes.OK).json({ expense });
 };
 
+const showStatistics = async (req, res) => {
+  const userId = req.user.userId;
+  const statistics = await getStatistics(userId);
+  res.status(StatusCodes.OK).json({ statistics });
+};
+
 module.exports = {
   showAllExpenses,
   addExpense,
   deleteExpense,
   updateExpense,
+  showStatistics,
 };
