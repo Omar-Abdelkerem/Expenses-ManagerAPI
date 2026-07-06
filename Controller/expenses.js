@@ -124,7 +124,8 @@ const updateExpense = async (req, res) => {
 const showStatistics = async (req, res) => {
   const userId = req.user.userId;
   const statistics = await getStatistics(userId);
-  res.status(StatusCodes.OK).json({ statistics });
+  const budgetStatus = await getBudgetStatus(userId);
+  res.status(StatusCodes.OK).json({ statistics, budgetStatus });
 };
 
 module.exports = {
