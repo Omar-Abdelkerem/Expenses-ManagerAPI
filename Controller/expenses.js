@@ -2,6 +2,7 @@ const Expense = require("../Models/expenses");
 const Category = require("../Models/category");
 const { getStatistics } = require("../services/expenseStatistics");
 const { StatusCodes } = require("http-status-codes");
+const { getBudgetStatus } = require("../services/getBudgetStatus");
 const {
   BadRequestError,
   NotFoundError,
@@ -71,8 +72,8 @@ const addExpense = async (req, res) => {
     category,
     userId,
   });
-
-  res.status(StatusCodes.CREATED).json({ expense });
+  const budgetStatus = await getBudgetStatus(userId);
+  res.status(StatusCodes.CREATED).json({ expense, budgetStatus });
 };
 
 const deleteExpense = async (req, res) => {
@@ -85,8 +86,10 @@ const deleteExpense = async (req, res) => {
   if (!expense) {
     throw new NotFoundError("Expense not found");
   }
-
-  res.status(StatusCodes.OK).json({ msg: "Expense deleted successfully" });
+  const budgetStatus = await getBudgetStatus(userId);
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: "Expense deleted successfully", budgetStatus });
 };
 
 const updateExpense = async (req, res) => {
@@ -114,8 +117,8 @@ const updateExpense = async (req, res) => {
   if (!expense) {
     throw new NotFoundError("Expense not found");
   }
-
-  res.status(StatusCodes.OK).json({ expense });
+  const budgetStatus = await getBudgetStatus(userId);
+  res.status(StatusCodes.OK).json({ expense, budgetStatus });
 };
 
 const showStatistics = async (req, res) => {
