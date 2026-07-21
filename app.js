@@ -1,6 +1,4 @@
 const express = require("express");
-const mongoose = require("mongoose");
-require("dotenv").config();
 const cors = require("cors");
 require("express-async-errors");
 const expensesRoutes = require("./Routes/expenses");
@@ -30,22 +28,8 @@ app.use("/expenses", authMiddleware, expensesRoutes);
 app.use("/auth", authRoutes);
 app.use("/profile", authMiddleware, ProfileRoutes);
 app.use("/category", authMiddleware, CategoryRoutes);
-// Connect to MongoDB
-const DbConnect = require("./DB/connect");
 
 app.use(notFoundMiddleware);
 app.use(ErrorHandlerMiddleware);
-const PORT = process.env.PORT || 5000;
-const startServer = async () => {
-  try {
-    await DbConnect();
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-      console.log("http://localhost:" + PORT);
-    });
-  } catch (error) {
-    console.error("Failed to start server:", error);
-  }
-};
 
-startServer();
+module.exports = app;

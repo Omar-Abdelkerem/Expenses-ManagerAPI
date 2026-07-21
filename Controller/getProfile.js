@@ -6,7 +6,7 @@ const Expense = require("../Models/expenses");
 
 const getProfile = async (req, res) => {
   const { userId } = req.user;
-  const user = await User.findById(userId);
+  const user = await User.findById(userId).select("-password");
   if (!user) {
     throw new NotFoundError("User not found");
   }
@@ -16,14 +16,20 @@ const getProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   const { userId } = req.user;
   const { username, email, budget, password } = req.body;
+  console.log("Decoded userId:", userId);
+
+  const existingUser = await User.findById(userId);
+
+  console.log("Existing user:", existingUser);
   const user = await User.findOneAndUpdate(
     { _id: userId },
     { username, email, budget, password },
     { new: true, runValidators: true },
-  );
+  ).select("-password");
   if (!user) {
     throw new NotFoundError("User not found");
   }
+  console.log("Updated user:", user);
   res.status(StatusCodes.OK).json({ user });
 };
 

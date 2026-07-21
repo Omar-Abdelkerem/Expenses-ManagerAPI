@@ -6,7 +6,7 @@ const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    throw new UnauthenticatedError("Unauthorized");
+    throw new UnauthenticatedError("Authorization header missing or malformed");
   }
 
   const token = authHeader.split(" ")[1];
@@ -16,7 +16,7 @@ const authMiddleware = (req, res, next) => {
     req.user = decoded; // Attach user info to the request object
     next();
   } catch (error) {
-    throw new UnauthenticatedError("Invalid token");
+    throw new UnauthenticatedError("Invalid or expired token");
   }
 };
 

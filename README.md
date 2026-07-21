@@ -1,6 +1,6 @@
 # Expenses Manager
 
-A focused, production-minded Node.js + Express API for personal expense tracking. It provides secure user registration and login, budget management, CRUD for expenses and categories, and a profile summary endpoint that calculates total spending and remaining budget. The project uses MongoDB (Mongoose) for persistence and JSON Web Tokens (JWT) for authentication.
+A focused, production-minded Node.js + Express API for personal expense tracking. It provides secure user registration and login, budget management, CRUD for expenses and categories, and a profile summary endpoint that calculates total spending and remaining budget. The project uses MongoDB (Mongoose) for persistence and JSON Web Tokens (JWT) for authentication, and it now includes category safety checks, expense statistics, and budget status responses after expense changes.
 
 ## Live API
 
@@ -182,6 +182,8 @@ All protected routes require an `Authorization` header with a Bearer token:
 Authorization: Bearer <token>
 ```
 
+Protected routes are enforced by the auth middleware, so every category, expense, and profile request must belong to the logged-in user.
+
 ### Authentication
 
 - `POST /auth/register` — Register a new user. Provide `username`, `email`, `password`, and optional `budget`.
@@ -192,9 +194,10 @@ Authorization: Bearer <token>
 Protected with JWT.
 
 - `GET /expenses` — List expenses for the authenticated user. Supports filtering, sorting, field selection, and pagination.
-- `POST /expenses` — Create a new expense. Payload: `title`, `amount`, `date` (optional), `category` (ObjectId)
-- `PATCH /expenses/:id` — Update an expense (owned by user).
-- `DELETE /expenses/:id` — Delete an expense (owned by user).
+- `POST /expenses` — Create a new expense. Payload: `title`, `amount`, `date` (optional), `category` (ObjectId). The response also returns `budgetStatus`.
+- `PATCH /expenses/:id` — Update an expense (owned by user). The response also returns `budgetStatus`.
+- `DELETE /expenses/:id` — Delete an expense (owned by user). The response also returns `budgetStatus`.
+- `GET /expenses/statistics` — Returns per-category spending statistics plus the current budget status.
 
 Query parameters for `GET /expenses`:
 
@@ -234,6 +237,8 @@ Protected with JWT.
 - `PATCH /category/:id` — Rename a category.
 - `DELETE /category/:id` — Delete a category. Deletion is prevented if any expenses reference the category (safe-delete rule).
 
+Category names are checked per user, so the same user cannot create the same category twice.
+
 Example delete error response when a category has associated expenses:
 
 ```json
@@ -247,6 +252,17 @@ Protected with JWT.
 - `GET /profile` — Get user profile (username, email, budget, etc.).
 - `PATCH /profile/update` — Update profile fields such as `username`, `email`, `budget`, `password`.
 - `GET /profile/summary` — Returns `budget`, `totalExpenses`, and `remainingMoney` (derived as `budget - totalExpenses`).
+
+## Test Coverage
+
+The repository includes Jest and Supertest integration tests for:
+
+- Authentication
+- Profile routes
+- Category routes
+- Expense routes
+
+The tests use a live MongoDB connection in the same style as the application, so they validate the real request flow instead of only isolated functions.
 
 Example `GET /profile/summary` response:
 
