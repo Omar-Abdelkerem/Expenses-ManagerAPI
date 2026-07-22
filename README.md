@@ -174,6 +174,32 @@ npm start
 
 The app uses `nodemon` for development reloads.
 
+## Docker
+
+This project includes a production Dockerfile for running the API in a container.
+
+Build the image:
+
+```bash
+sudo docker build -t expenses-manager .
+```
+
+Run the container with your environment variables:
+
+```bash
+sudo docker run -d --rm --name expenses-manager-test -p 5000:5000 --env-file .env expenses-manager
+```
+
+If Docker rejects the `.env` file, make sure the variable names do not contain spaces around the `=` sign.
+
+Test the running container:
+
+```bash
+curl http://localhost:5000/
+```
+
+The root route should return `API is running`.
+
 ## API Overview
 
 All protected routes require an `Authorization` header with a Bearer token:
